@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "ChatBox.h"
+#include "ui_ChatBox.h"
 #include <QTextStream>
 #include <QDebug>
 #include <iostream>
@@ -27,7 +29,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 }
-
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -39,3 +40,18 @@ void MainWindow::broadcastAll(){
     mSocket->flush();
 }
 
+int MainWindow::Is_Active() {
+    return is_active;
+}
+
+void MainWindow::on_clear_clicked()
+{
+    //brise sadrzaj iz hostname i port polja..
+}
+
+void MainWindow::on_connect_button_clicked()
+{
+    //konektovanje na server i prikaz ChatBoxa..
+    this->close();
+    is_active = 1;
+}
