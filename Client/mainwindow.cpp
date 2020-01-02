@@ -1,18 +1,14 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "ChatBox.h"
-#include "ui_ChatBox.h"
-#include <QTextStream>
-#include <QDebug>
-#include <iostream>
-#include <string>
-
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+//prvo je vidljiv loginPage
+    ui->stackedWidget->setCurrentWidget(ui->loginPage);
+
 
 //testiranje povezivanja na server
     mSocket = new QTcpSocket(this);
@@ -52,6 +48,9 @@ void MainWindow::on_clear_clicked()
 void MainWindow::on_connect_button_clicked()
 {
     //konektovanje na server i prikaz ChatBoxa..
-    this->close();
-    is_active = 1;
+    ui->stackedWidget->setCurrentWidget(ui->chatPage);
+}
+
+void MainWindow::on_send_clicked(){
+    //TODO
 }

@@ -3,7 +3,12 @@
 
 #include <QMainWindow>
 #include <QTcpSocket>
-
+#include "ui_mainwindow.h"
+#include <QTextStream>
+#include <QDebug>
+#include <iostream>
+#include <string>
+#include <QStackedWidget>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -23,6 +28,7 @@ public:
 private slots:
 
     void on_clear_clicked();
+    void on_send_clicked();
 
     void on_connect_button_clicked();
 
