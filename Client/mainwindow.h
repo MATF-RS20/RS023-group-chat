@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 #include <QStackedWidget>
+#include <QString>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -23,15 +24,11 @@ public:
     ~MainWindow();
     void broadcastAll();
     void testSignal();
-
-    int Is_Active();
 private slots:
-
     void on_clear_clicked();
     void on_send_clicked();
-
     void on_connect_button_clicked();
-
+    void fromServer();
 private:
     Ui::MainWindow *ui;
     //socket klijenta

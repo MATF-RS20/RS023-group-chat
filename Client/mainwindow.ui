@@ -1485,7 +1485,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="message_2"/>
+        <widget class="QLineEdit" name="message"/>
        </item>
       </layout>
      </widget>

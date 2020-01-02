@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
    w.show();
 
     //svaki klijent poziva broadcastAll
-    w.broadcastAll();
+//    w.broadcastAll();
 
     return a.exec();
 }

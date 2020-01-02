@@ -9,21 +9,6 @@ MainWindow::MainWindow(QWidget *parent)
 //prvo je vidljiv loginPage
     ui->stackedWidget->setCurrentWidget(ui->loginPage);
 
-
-//testiranje povezivanja na server
-    mSocket = new QTcpSocket(this);
-    mSocket->connectToHost("localhost",4567);
-
-
-//    klijent dobija informaciju da je neki drugi klijent povezan na server
-    connect(mSocket, &QTcpSocket::readyRead, [&]() {
-        QTextStream T(mSocket);
-        auto text = T.readAll();
-        std::string textIspis = text.toUtf8().constData();
-        std::cout << textIspis << std::endl;
-    });
-
-
 }
 MainWindow::~MainWindow()
 {
@@ -36,21 +21,39 @@ void MainWindow::broadcastAll(){
     mSocket->flush();
 }
 
-int MainWindow::Is_Active() {
-    return is_active;
-}
 
 void MainWindow::on_clear_clicked()
 {
     //brise sadrzaj iz hostname i port polja..
 }
 
+void MainWindow::fromServer(){
+    QTextStream T(mSocket);
+    auto text = T.readAll();
+    ui->textBox->append(text);
+}
+
 void MainWindow::on_connect_button_clicked()
 {
     //konektovanje na server i prikaz ChatBoxa..
+    QString host = ui->hostname->text();
+    qint16 port = ui->port->value();
+    mSocket = new QTcpSocket(this);
+    mSocket->connectToHost(host,port);
+
+    connect(mSocket, &QTcpSocket::readyRead,this,&MainWindow::fromServer);
+    broadcastAll();
     ui->stackedWidget->setCurrentWidget(ui->chatPage);
 }
 
 void MainWindow::on_send_clicked(){
-    //TODO
+    QString msg = ui->message->text();
+    if(!msg.isEmpty()){
+        QTextStream T(mSocket);
+        T << msg;
+        mSocket->flush();
+        ui->textBox->append(msg);
+    }
+    ui->message->clear();
+    ui->message->setFocus();
 }
