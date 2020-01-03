@@ -29,17 +29,18 @@ private slots:
     void on_send_clicked();
     void on_connect_button_clicked();
     void fromServer();
+    void connectSuccesful();
     void on_signUp_clicked();
-
     void on_buttonBox_accepted();
-
     void on_buttonBox_rejected();
 
 private:
     Ui::MainWindow *ui;
-    //socket klijenta
+    //server socket
     QTcpSocket* mSocket;
-    QString name;
-    int is_active;
+    //user,pass,nickname klijenta
+    QString mUsername;
+    QString mPassword;
+    QString mNickname;
 };
 #endif // MAINWINDOW_H

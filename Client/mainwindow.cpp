@@ -28,7 +28,6 @@ void MainWindow::on_clear_clicked()
     ui->hostname->clear();
     ui->username->clear();
     ui->password->clear();
-    ui->nickname->clear();
     ui->port->setValue(0);
 }
 
@@ -46,10 +45,16 @@ void MainWindow::on_connect_button_clicked()
     mSocket = new QTcpSocket(this);
     mSocket->connectToHost(host,port);
 
+    connect(mSocket,&QTcpSocket::connected,this,&MainWindow::connectSuccesful);
     connect(mSocket, &QTcpSocket::readyRead,this,&MainWindow::fromServer);
-    broadcastAll();
-    ui->stackedWidget->setCurrentWidget(ui->chatPage);
 }
+
+void MainWindow::connectSuccesful(){
+    ui->stackedWidget->setCurrentWidget(ui->chatPage);
+    broadcastAll();
+    qDebug() << "ok connection!";
+}
+
 
 void MainWindow::on_send_clicked(){
     QString msg = ui->message->text();
@@ -73,13 +78,27 @@ void MainWindow::on_signUp_clicked()
 void MainWindow::on_buttonBox_accepted()
 {
     //Potvrda novog naloga (Treba napraviti novi nalog korisnika)
+    mNickname = ui->nickname_line->text();
+    mUsername = ui->username_line->text();
+    mPassword = ui->password_line->text();
+    if(mNickname.isEmpty() or mUsername.isEmpty() or mPassword.isEmpty()){
+        qDebug() << "Nickname,user,pass: " <<  mNickname << mUsername << mPassword;
+        on_buttonBox_rejected();
+        ui->stackedWidget->setCurrentWidget(ui->SignUpPage);
+        ui->error_msg_line->setText("Morate uneti sva tri polja...");
+    }else{
+        qDebug() << "Nickname,user,pass: " <<  mNickname << mUsername << mPassword;
+        ui->stackedWidget->setCurrentWidget(ui->loginPage);
+    }
 }
 
 void MainWindow::on_buttonBox_rejected()
 {
     //Korisnik je odustao od pravljenja naloga
     //Vracamo se na glavni prozor aplikacije
-    ui->newPassword->clear();
-    ui->newUsername->clear();
+    ui->password_line->clear();
+    ui->username_line->clear();
+    ui->nickname_line->clear();
+    ui->error_msg_line->clear();
     ui->stackedWidget->setCurrentWidget(ui->loginPage);
 }

@@ -22,7 +22,7 @@ void SocketServer::incomingConnection(qintptr socketfd)
     for (const auto &i :  mSockets) {
         if(i != socket){
             QTextStream T(i);
-            T << "Povezan je klijent: " << socket->socketDescriptor();
+            T << "[server]:Povezan je klijent: " << socket->socketDescriptor();
             i->flush();
         }
     }
