@@ -471,6 +471,9 @@
       <height>361</height>
      </rect>
     </property>
+    <property name="currentIndex">
+     <number>1</number>
+    </property>
     <widget class="QWidget" name="loginPage">
      <property name="enabled">
       <bool>true</bool>
@@ -481,7 +484,7 @@
         <x>230</x>
         <y>30</y>
         <width>141</width>
-        <height>111</height>
+        <height>131</height>
        </rect>
       </property>
       <property name="text">
@@ -954,6 +957,9 @@
             </colorrole>
            </disabled>
           </palette>
+         </property>
+         <property name="clearButtonEnabled">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -1485,7 +1491,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="message"/>
+        <widget class="QLineEdit" name="message">
+         <property name="clearButtonEnabled">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

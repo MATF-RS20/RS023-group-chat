@@ -25,6 +25,8 @@ void MainWindow::broadcastAll(){
 void MainWindow::on_clear_clicked()
 {
     //brise sadrzaj iz hostname i port polja..
+    ui->hostname->clear();
+    ui->port->setValue(0);
 }
 
 void MainWindow::fromServer(){
