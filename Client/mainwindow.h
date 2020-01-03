@@ -29,6 +29,12 @@ private slots:
     void on_send_clicked();
     void on_connect_button_clicked();
     void fromServer();
+    void on_signUp_clicked();
+
+    void on_buttonBox_accepted();
+
+    void on_buttonBox_rejected();
+
 private:
     Ui::MainWindow *ui;
     //socket klijenta

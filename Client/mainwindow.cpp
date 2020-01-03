@@ -24,8 +24,11 @@ void MainWindow::broadcastAll(){
 
 void MainWindow::on_clear_clicked()
 {
-    //brise sadrzaj iz hostname i port polja..
+    //brise sadrzaj svih polja..
     ui->hostname->clear();
+    ui->username->clear();
+    ui->password->clear();
+    ui->nickname->clear();
     ui->port->setValue(0);
 }
 
@@ -58,4 +61,25 @@ void MainWindow::on_send_clicked(){
     }
     ui->message->clear();
     ui->message->setFocus();
+}
+
+void MainWindow::on_signUp_clicked()
+{
+    //Otvara se prozor za prijavljivanje novih clanova :)
+    on_clear_clicked();
+    ui->stackedWidget->setCurrentWidget(ui->SignUpPage);
+}
+
+void MainWindow::on_buttonBox_accepted()
+{
+    //Potvrda novog naloga (Treba napraviti novi nalog korisnika)
+}
+
+void MainWindow::on_buttonBox_rejected()
+{
+    //Korisnik je odustao od pravljenja naloga
+    //Vracamo se na glavni prozor aplikacije
+    ui->newPassword->clear();
+    ui->newUsername->clear();
+    ui->stackedWidget->setCurrentWidget(ui->loginPage);
 }
