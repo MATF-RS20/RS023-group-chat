@@ -2,6 +2,7 @@
 #define SOCKETSERVER_H
 
 #include <QTcpServer>
+#include <QMap>
 
 class SocketClient;
 
