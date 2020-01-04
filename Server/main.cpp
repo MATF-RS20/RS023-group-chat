@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
         return 1;
     }
     qDebug() << "Server listening :)";
+    Server.readClientsData();
 
     return a.exec();
 }

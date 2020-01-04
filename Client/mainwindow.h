@@ -33,14 +33,22 @@ private slots:
     void on_signUp_clicked();
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
+    void fromServerAccCheck();
 
 private:
     Ui::MainWindow *ui;
     //server socket
     QTcpSocket* mSocket;
-    //user,pass,nickname klijenta
+    //user,pass,nickname klijenta pri pravljenju acc-a
     QString mUsername;
     QString mPassword;
     QString mNickname;
+    //user,pass,nickname klijenta pri logovanju
+    QString mUsernameLog;
+    QString mPasswordLog;
+    QString mNicknameLog;
+
+//    ovaj socket otvaramo ka serveru samo kada proveravamo acc
+    QTcpSocket *mSocketTmp;
 };
 #endif // MAINWINDOW_H

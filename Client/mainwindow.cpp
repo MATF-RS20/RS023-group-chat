@@ -34,7 +34,21 @@ void MainWindow::on_clear_clicked()
 void MainWindow::fromServer(){
     QTextStream T(mSocket);
     auto text = T.readAll();
-    ui->textBox->append(text);
+
+    if(text.startsWith("[logAccepted]")){
+        QList<QString> tmpList = text.split(":");
+        mNicknameLog = tmpList[1];
+        ui->stackedWidget->setCurrentWidget(ui->chatPage);
+        broadcastAll();
+    }else if(text.startsWith("[logDeclinedUsrPas]")){
+        qDebug() << "USER PASS INCORECT!";
+        ui->error_msg_line_2->setText("Ne postojeci user i pass...");
+        mSocket->disconnectFromHost();
+    }else if(text.startsWith("[logDeclinedInUse]")){
+        ui->error_msg_line_2->setText("Korisnik sa tim user i pass je vec logovan...");
+    }else{
+        ui->textBox->append(text);
+    }
 }
 
 void MainWindow::on_connect_button_clicked()
@@ -45,14 +59,17 @@ void MainWindow::on_connect_button_clicked()
     mSocket = new QTcpSocket(this);
     mSocket->connectToHost(host,port);
 
+    mUsernameLog = ui->username->text();
+    mPasswordLog = ui->password->text();
+
     connect(mSocket,&QTcpSocket::connected,this,&MainWindow::connectSuccesful);
     connect(mSocket, &QTcpSocket::readyRead,this,&MainWindow::fromServer);
 }
 
 void MainWindow::connectSuccesful(){
-    ui->stackedWidget->setCurrentWidget(ui->chatPage);
-    broadcastAll();
-    qDebug() << "ok connection!";
+    QTextStream T(mSocket);
+    T << "[logCheck]:" << mUsernameLog << ":" << mPasswordLog;
+    mSocket->flush();
 }
 
 
@@ -62,7 +79,11 @@ void MainWindow::on_send_clicked(){
         QTextStream T(mSocket);
         T << msg;
         mSocket->flush();
-        ui->textBox->append(msg);
+        QString tmp = "[";
+        tmp.append(mNicknameLog);
+        tmp.append("]:");
+        tmp.append(msg);
+        ui->textBox->append(tmp);
     }
     ui->message->clear();
     ui->message->setFocus();
@@ -88,8 +109,29 @@ void MainWindow::on_buttonBox_accepted()
         ui->error_msg_line->setText("Morate uneti sva tri polja...");
     }else{
         qDebug() << "Nickname,user,pass: " <<  mNickname << mUsername << mPassword;
+        //TEST
+        mSocketTmp = new QTcpSocket(this);
+        mSocketTmp->connectToHost("localhost",4567);
+        connect(mSocketTmp, &QTcpSocket::readyRead,this,&MainWindow::fromServerAccCheck);
+        QTextStream T(mSocketTmp);
+        T << "[accCheck]:" << mNickname << ":" << mUsername << ":" << mPassword;
+        mSocketTmp->flush();
+        //TEST
         ui->stackedWidget->setCurrentWidget(ui->loginPage);
     }
+}
+
+void MainWindow::fromServerAccCheck(){
+    QTextStream T(mSocketTmp);
+    auto text = T.readAll();
+    if(text.startsWith("OK")){
+        qDebug() << "OK!!!";
+    }else{
+        on_buttonBox_rejected();
+        ui->stackedWidget->setCurrentWidget(ui->SignUpPage);
+        ui->error_msg_line->setText("Acc vec postoji...");
+    }
+    mSocketTmp->disconnectFromHost();
 }
 
 void MainWindow::on_buttonBox_rejected()
