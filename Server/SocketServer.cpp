@@ -73,7 +73,7 @@ void SocketServer::broadcastAll(SocketClient *client){
         for(auto &i : mClientsData){
             if(clientNickname.compare(i.clintNickname) == 0 or clientPassword.compare(i.clientPassword) == 0
                      or clientUsername.compare(i.clientUsername) == 0){
-                S << "INCORECT";
+                S << "INCORRECT";
                 client->flush();
                 return;
             }
@@ -122,9 +122,18 @@ void SocketServer::broadcastAll(SocketClient *client){
                 client->flush();
                 return;
             }
-        }
+            if(i.clientUsername.compare(user) == 0 and i.clientPassword.compare(pass) != 0){
+                //postoji user ali je sifra pogresna
+                qDebug() << "Poklopio se USER ali PASSWD pogresan!";
+                mSockets.removeOne(client);
+                mAccSocketsDeclined << client;
+                S << "[PasswdIncorrect]:";
+                client->flush();
+                return;
+            }
 
-        qDebug() << "Nije se poklopio user zbog ne postojeceg usra i pass!";
+        }
+        qDebug() << "Nije se poklopio user zbog nepostojeceg usra i pass!";
         mSockets.removeOne(client);
         mAccSocketsDeclined << client;
         S << "[logDeclinedUsrPas]";

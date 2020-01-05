@@ -6,6 +6,14 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+//---pozadina aplikacije
+   // QPixmap background("/home/andjela/Desktop/RS023-group-chat/images/b3.jpg");
+   // background = background.scaled(this->size());
+   // QPalette palette;
+   // palette.setBrush(QPalette::Background, background);
+   // this->setPalette(palette);
+//---
+
 //prvo je vidljiv loginPage
     ui->stackedWidget->setCurrentWidget(ui->loginPage);
 
@@ -28,6 +36,7 @@ void MainWindow::on_clear_clicked()
     ui->hostname->clear();
     ui->username->clear();
     ui->password->clear();
+    ui->error_msg_line_2->clear();
     ui->port->setValue(0);
 }
 
@@ -42,11 +51,20 @@ void MainWindow::fromServer(){
         broadcastAll();
     }else if(text.startsWith("[logDeclinedUsrPas]")){
         qDebug() << "USER PASS INCORECT!";
-        ui->error_msg_line_2->setText("Ne postojeci user i pass...");
+        if(ui->username->text() == "" || ui->password->text() == ""){
+            ui->error_msg_line_2->setText("Molimo popunite sva polja..");
+        }
+        else{
+        ui->error_msg_line_2->setText("Nepostojeci nalog...");
+        }
         mSocket->disconnectFromHost();
     }else if(text.startsWith("[logDeclinedInUse]")){
-        ui->error_msg_line_2->setText("Korisnik sa tim user i pass je vec logovan...");
-    }else{
+        ui->error_msg_line_2->setText("Korisnik je vec aktivan...");
+    }
+    else if(text.startsWith("[PasswdIncorrect]:")){
+         ui->error_msg_line_2->setText("Pogresna sifra naloga..");
+    }
+    else{
         ui->textBox->append(text);
     }
 }
