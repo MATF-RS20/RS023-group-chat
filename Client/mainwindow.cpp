@@ -43,25 +43,41 @@ void MainWindow::on_clear_clicked()
 void MainWindow::fromServer(){
     QTextStream T(mSocket);
     auto text = T.readAll();
+    //NASTAVAK KODA
+    //ovde dole napravi novu else-if granu, if text starts with [removeFromUserList]
+    //splitujes po ":"
+    //uzmes nickname
+    //izbrises ga iz mOnlineUsers
+    //i pozivas redom
+//    ui->OnlineUsersBox->clear();
+//    ui->OnlineUsersBox->setText(mOnlineUsers);
+    //mozda bude problema, ugubo ovako nekako treba da se odradi, useri moraju da se redjaju od vrha ka dnu redom
+    //ne sme da bude razmaka izmedju njih u OnlineUSersBox-u
+    //dodaj regex-e za proveru usera i pass , oznaceno dole gde trebas da dodas proveru u fji on_buttonBox_accepted
 
     if(text.startsWith("[logAccepted]")){
         QList<QString> tmpList = text.split(":");
         mNicknameLog = tmpList[1];
-        QString OnlineUsers = "";
+        mOnlineUsers = "";
+        qDebug() << tmpList.size();
         for(auto i=2;i<tmpList.size();i++){
-            OnlineUsers.append(tmpList[i]);
-            if(i != tmpList.size() - 1){
-                OnlineUsers.append("\n");
+            if(!tmpList[i].isEmpty()){
+                mOnlineUsers.append(tmpList[i] + "\n");
             }
         }
+
+        qDebug() << mOnlineUsers << " ***logAccepted**";
         ui->stackedWidget->setCurrentWidget(ui->chatPage);
-        ui->OnlineUsersBox->append(OnlineUsers);
+        ui->OnlineUsersBox->setText(mOnlineUsers);
         broadcastAll();
     }
     else if(text.startsWith("[NewClientOnline]")){
          QList<QString> tmpList = text.split(":");
          QString newUserOnline = tmpList[1];
-         ui->OnlineUsersBox->append(newUserOnline);
+         mOnlineUsers.append(newUserOnline + "\n");
+         qDebug() << mOnlineUsers << " ***newClientsOnline**";
+         ui->OnlineUsersBox->clear();
+         ui->OnlineUsersBox->setText(mOnlineUsers);
     }
     else if(text.startsWith("[logDeclinedUsrPas]")){
         qDebug() << "USER PASS INCORECT!";
@@ -134,6 +150,17 @@ void MainWindow::on_signUp_clicked()
 
 void MainWindow::on_buttonBox_accepted()
 {
+
+//    dodas ovde jedan if pre ovih if else grana
+    //i pitas da li mUsername i mPassword zadovoljavaju regex, ako ne ispises u error msg line poruku u zavisnosti sta ne zadovoljava
+    //kao u if grani dole i kazes return , da izadje iz ove fje odmah, tj ne das mu da pita ovaj if else dole bez potrebe
+    //i to je to , taman mozes da napravis rekompoziciju ovih if else grana dole jer ovo ne valja
+    // ova if grana moze da se kombinuje sa tvojim kodom sa regexima, dakle kada god nesto ne valja neka udje u tu neku if granu
+    //ili kako vec napravis,kada su user,nick i pass dobri treba da radi ovu elsu granu i to nemoj da diras jel je dobro napisana
+    //tj samo napravi da kada su polja popunjena i prodju regexe onda ode u ovaj trenutni else a inace da radi ovaj ispis greske
+    //kao u ovoj if grani sto sada bleji...slobodno menjaj kako ti odgovara..malo sam preterao kao da pisem esej :D
+
+
     //Potvrda novog naloga (Treba napraviti novi nalog korisnika)
     mNickname = ui->nickname_line->text();
     mUsername = ui->username_line->text();

@@ -50,5 +50,8 @@ private:
 
 //    ovaj socket otvaramo ka serveru samo kada proveravamo acc
     QTcpSocket *mSocketTmp;
+
+//    lista online usera
+    QString mOnlineUsers;
 };
 #endif // MAINWINDOW_H
