@@ -118,8 +118,26 @@ void SocketServer::broadcastAll(SocketClient *client){
                 }
                 qDebug() << "Poklopio se USER!";
                 i.clientSocket = client;
-                S << "[logAccepted]:" << i.clintNickname;
+
+                //saljemo ulogovanom sve trenutne online
+                QString onlineUsers = "";
+                for(const auto &j: mClientsData){
+                    if(j.clientSocket != nullptr and j.clientSocket != i.clientSocket){
+                        onlineUsers.append(j.clintNickname);
+                        onlineUsers.append(":");
+                    }
+                }
+                S << "[logAccepted]:" << i.clintNickname << ":" << onlineUsers;
                 client->flush();
+
+                //saljemo ostalima novog ulogovanog
+                for (const auto &j : mClientsData) {
+                    if(j.clientSocket != client and j.clientSocket != nullptr){
+                        QTextStream K(j.clientSocket);
+                        K << "[NewClientOnline]:" << i.clintNickname;
+                        j.clientSocket->flush();
+                    }
+                }
                 return;
             }
             if(i.clientUsername.compare(user) == 0 and i.clientPassword.compare(pass) != 0){

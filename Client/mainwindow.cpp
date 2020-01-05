@@ -47,9 +47,23 @@ void MainWindow::fromServer(){
     if(text.startsWith("[logAccepted]")){
         QList<QString> tmpList = text.split(":");
         mNicknameLog = tmpList[1];
+        QString OnlineUsers = "";
+        for(auto i=2;i<tmpList.size();i++){
+            OnlineUsers.append(tmpList[i]);
+            if(i != tmpList.size() - 1){
+                OnlineUsers.append("\n");
+            }
+        }
         ui->stackedWidget->setCurrentWidget(ui->chatPage);
+        ui->OnlineUsersBox->append(OnlineUsers);
         broadcastAll();
-    }else if(text.startsWith("[logDeclinedUsrPas]")){
+    }
+    else if(text.startsWith("[NewClientOnline]")){
+         QList<QString> tmpList = text.split(":");
+         QString newUserOnline = tmpList[1];
+         ui->OnlineUsersBox->append(newUserOnline);
+    }
+    else if(text.startsWith("[logDeclinedUsrPas]")){
         qDebug() << "USER PASS INCORECT!";
         ui->error_msg_line_2->setText("Nepostojeci nalog...");
         mSocket->disconnectFromHost();

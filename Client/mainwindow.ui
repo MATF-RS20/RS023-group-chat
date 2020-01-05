@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>617</width>
+    <width>619</width>
     <height>548</height>
    </rect>
   </property>
@@ -2530,8 +2530,8 @@
      <widget class="QWidget" name="horizontalLayoutWidget_3">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>440</y>
+        <x>20</x>
+        <y>430</y>
         <width>381</width>
         <height>41</height>
        </rect>
@@ -2556,8 +2556,8 @@
      <widget class="QLabel" name="label_6">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>20</y>
+        <x>20</x>
+        <y>0</y>
         <width>61</width>
         <height>61</height>
        </rect>
@@ -2575,8 +2575,8 @@
      <widget class="QPushButton" name="send">
       <property name="geometry">
        <rect>
-        <x>510</x>
-        <y>440</y>
+        <x>440</x>
+        <y>430</y>
         <width>81</width>
         <height>41</height>
        </rect>
@@ -2601,7 +2601,7 @@
      <widget class="QTextEdit" name="textBox">
       <property name="geometry">
        <rect>
-        <x>160</x>
+        <x>90</x>
         <y>30</y>
         <width>311</width>
         <height>401</height>
@@ -2609,6 +2609,62 @@
       </property>
       <property name="styleSheet">
        <string notr="true">background-color: qlineargradient(spread:reflect, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(161, 195, 229, 255), stop:1 rgba(255, 255, 255, 255));</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_12">
+      <property name="geometry">
+       <rect>
+        <x>480</x>
+        <y>10</y>
+        <width>101</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Online users</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_14">
+      <property name="geometry">
+       <rect>
+        <x>460</x>
+        <y>10</y>
+        <width>16</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>../images/online.png</pixmap>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="OnlineUsersBox">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>30</y>
+        <width>171</width>
+        <height>291</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: qlineargradient(spread:reflect, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(161, 195, 229, 255), stop:1 rgba(255, 255, 255, 255));</string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
       </property>
      </widget>
     </widget>
@@ -3262,7 +3318,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>617</width>
+     <width>619</width>
      <height>22</height>
     </rect>
    </property>
