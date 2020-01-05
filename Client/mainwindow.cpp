@@ -7,11 +7,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
 //---pozadina aplikacije
-   // QPixmap background("/home/andjela/Desktop/RS023-group-chat/images/b3.jpg");
-   // background = background.scaled(this->size());
-   // QPalette palette;
-   // palette.setBrush(QPalette::Background, background);
-   // this->setPalette(palette);
+    QPixmap background("../images/b3.jpg");
+    background = background.scaled(this->size());
+    QPalette palette;
+    palette.setBrush(QPalette::Background, background);
+    this->setPalette(palette);
 //---
 
 //prvo je vidljiv loginPage
@@ -51,17 +51,14 @@ void MainWindow::fromServer(){
         broadcastAll();
     }else if(text.startsWith("[logDeclinedUsrPas]")){
         qDebug() << "USER PASS INCORECT!";
-        if(ui->username->text() == "" || ui->password->text() == ""){
-            ui->error_msg_line_2->setText("Molimo popunite sva polja..");
-        }
-        else{
         ui->error_msg_line_2->setText("Nepostojeci nalog...");
-        }
         mSocket->disconnectFromHost();
     }else if(text.startsWith("[logDeclinedInUse]")){
+        mSocket->disconnectFromHost();
         ui->error_msg_line_2->setText("Korisnik je vec aktivan...");
     }
     else if(text.startsWith("[PasswdIncorrect]:")){
+         mSocket->disconnectFromHost();
          ui->error_msg_line_2->setText("Pogresna sifra naloga..");
     }
     else{
@@ -72,6 +69,13 @@ void MainWindow::fromServer(){
 void MainWindow::on_connect_button_clicked()
 {
     //konektovanje na server i prikaz ChatBoxa..
+
+    if(ui->username->text() == "" || ui->password->text() == "" || ui->hostname->text() == ""
+             || ui->port->text() == ""){
+        ui->error_msg_line_2->setText("Molimo popunite sva polja..");
+        return;
+    }
+
     QString host = ui->hostname->text();
     qint16 port = ui->port->value();
     mSocket = new QTcpSocket(this);
