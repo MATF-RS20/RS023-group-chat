@@ -158,47 +158,6 @@ void SocketServer::broadcastAll(SocketClient *client){
         client->flush();
         return;
     }
-    else if(text.startsWith("[DeleteAcc]")){
-        qDebug() << "DELETE ACC!";
-        QList<QString> splited = text.split(":");
-        QString user = splited[1];
-        QString pass = splited[2];
-        int pos = 0;
-        for(auto &i : mClientsData){
-            if(user.compare(i.clientUsername) == 0 and pass.compare(i.clientPassword) == 0){
-                //Postoji nalog
-                //brisemo ga iz iz fajla client.txt
-                QString nickname = i.clintNickname;
-                QFile clientsData("clients.txt");
-                clientsData.open(QFile::ReadWrite | QFile::Text | QFile::Append);
-                QTextStream in(&clientsData);
-                QString line;
-                QString content = "";
-                while(true){
-                    line = in.readLine();
-                    if(line.compare(nickname + ":" + user + ":" + pass) != 0){
-                        content.append(line + "\n");
-                    }
-                }
-                clientsData.resize(0);
-                in << content;
-                in.flush();
-                clientsData.close();
-
-                //Brisanje iz liste naloga
-                mClientsData.removeAt(pos);
-
-                S << "[DELETED]";
-                client->flush();
-                return;
-            }
-            pos++;
-        }
-
-        S<<"FAILED!";
-        client->flush();
-
-    }
     else{
         QString tmpNickname;
         for(const auto &i : mClientsData){
