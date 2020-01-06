@@ -43,19 +43,47 @@ void MainWindow::on_clear_clicked()
 void MainWindow::fromServer(){
     QTextStream T(mSocket);
     auto text = T.readAll();
-    //NASTAVAK KODA
-    //ovde dole napravi novu else-if granu, if text starts with [removeFromUserList]
-    //splitujes po ":"
-    //uzmes nickname
-    //izbrises ga iz mOnlineUsers
-    //i pozivas redom
-//    ui->OnlineUsersBox->clear();
-//    ui->OnlineUsersBox->setText(mOnlineUsers);
-    //mozda bude problema, ugubo ovako nekako treba da se odradi, useri moraju da se redjaju od vrha ka dnu redom
-    //ne sme da bude razmaka izmedju njih u OnlineUSersBox-u
-    //dodaj regex-e za proveru usera i pass , oznaceno dole gde trebas da dodas proveru u fji on_buttonBox_accepted
 
-    if(text.startsWith("[logAccepted]")){
+    //dodaj regex-e za proveru usera i pass , oznaceno dole gde treba da se doda provera u fji on_buttonBox_accepted
+
+    if(text.startsWith("[flushBug]")){
+            qDebug()<<"uslaaaaa";
+
+            QList<QString> tmpList = text.split(":");
+            auto nickLogOut = tmpList[2];
+
+            ui->textBox->append("klijent:");
+            ui->textBox->append(nickLogOut);
+            ui->textBox->append("se diskonektovao...");
+
+            ui->OnlineUsersBox->clear();
+            for (const auto &i : mOnlineUsers){
+                if (i.compare(nickLogOut)!=0){//ako su razliciti
+                    ui->OnlineUsersBox->append(i);
+                }
+            }
+
+            QList<QString> tmpUsers(mOnlineUsers);
+            qDebug()<<"tmp pre promene:"<<tmpUsers;
+            for (auto i=0;i<tmpUsers.size(); i++){
+                if (tmpUsers[i].compare(nickLogOut)){
+                    tmpUsers[i]="";
+                }
+
+            }
+            mOnlineUsers.clear();
+            for (auto i=0;i<tmpUsers.size();i++){
+                if (tmpUsers[i]==""){
+                    continue;
+                }
+                else {
+                     mOnlineUsers.append(tmpUsers[i]);
+                }
+            }
+            qDebug()<<"musers:"<<mOnlineUsers;
+            tmpUsers.clear();
+    }
+    else if(text.startsWith("[logAccepted]")){
         QList<QString> tmpList = text.split(":");
         mNicknameLog = tmpList[1];
         qDebug() << tmpList.size();
@@ -155,15 +183,14 @@ void MainWindow::on_signUp_clicked()
 void MainWindow::on_buttonBox_accepted()
 {
 
-//    dodas ovde jedan if pre ovih if else grana
+//    doda se  ovde jedan if pre ovih if else grana
     //i pitas da li mUsername i mPassword zadovoljavaju regex, ako ne ispises u error msg line poruku u zavisnosti sta ne zadovoljava
     //kao u if grani dole i kazes return , da izadje iz ove fje odmah, tj ne das mu da pita ovaj if else dole bez potrebe
     //i to je to , taman mozes da napravis rekompoziciju ovih if else grana dole jer ovo ne valja
     // ova if grana moze da se kombinuje sa tvojim kodom sa regexima, dakle kada god nesto ne valja neka udje u tu neku if granu
     //ili kako vec napravis,kada su user,nick i pass dobri treba da radi ovu elsu granu i to nemoj da diras jel je dobro napisana
     //tj samo napravi da kada su polja popunjena i prodju regexe onda ode u ovaj trenutni else a inace da radi ovaj ispis greske
-    //kao u ovoj if grani sto sada bleji...slobodno menjaj kako ti odgovara..malo sam preterao kao da pisem esej :D
-
+    //kao u ovoj if grani sto sada bleji...
 
     //Potvrda novog naloga (Treba napraviti novi nalog korisnika)
     mNickname = ui->nickname_line->text();

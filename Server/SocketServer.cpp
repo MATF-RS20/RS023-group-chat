@@ -196,15 +196,12 @@ void SocketServer::clientDisconected(SocketClient *S, int ST){
             }
             for (const auto &i : mSockets) {
                 QTextStream K(i);
-                K << "[server]:klijent ["
-                  << pom.clintNickname
-                  << "] se diskonektovao!";
+                K << "[flushBug]:diskonektovao se klijent:"
+                  << pom.clintNickname;
                 i->flush();
+                K.flush();
             }
 
-            //OVDE SALJES KLIJENTIMA PORUKU PO NAZIVOM [removeFromUserList]
-            // ista petlja kao ova iznad, otvoris novi stream npr S i pises u njega << "[removeFromUserLis]:" << pom.nickname
-            //na klijentu dohvatas to splitujes po ":" i uzmes text[1] jer je to nickname, na klijentu ostatak teksta...
         }else{
             if(mAccSockets.removeOne(S)){
                 qDebug() << "Obrisan je accMake socket!";
