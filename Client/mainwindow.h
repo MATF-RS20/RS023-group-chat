@@ -52,6 +52,6 @@ private:
     QTcpSocket *mSocketTmp;
 
 //    lista online usera
-    QString mOnlineUsers;
+    QList<QString> mOnlineUsers;
 };
 #endif // MAINWINDOW_H

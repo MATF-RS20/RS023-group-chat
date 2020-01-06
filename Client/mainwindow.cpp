@@ -58,26 +58,30 @@ void MainWindow::fromServer(){
     if(text.startsWith("[logAccepted]")){
         QList<QString> tmpList = text.split(":");
         mNicknameLog = tmpList[1];
-        mOnlineUsers = "";
         qDebug() << tmpList.size();
         for(auto i=2;i<tmpList.size();i++){
             if(!tmpList[i].isEmpty()){
-                mOnlineUsers.append(tmpList[i] + "\n");
+                mOnlineUsers.append(tmpList[i]);
             }
         }
 
         qDebug() << mOnlineUsers << " ***logAccepted**";
         ui->stackedWidget->setCurrentWidget(ui->chatPage);
-        ui->OnlineUsersBox->setText(mOnlineUsers);
+        for(const auto &i : mOnlineUsers){
+            ui->OnlineUsersBox->append(i);
+        }
         broadcastAll();
     }
     else if(text.startsWith("[NewClientOnline]")){
          QList<QString> tmpList = text.split(":");
          QString newUserOnline = tmpList[1];
-         mOnlineUsers.append(newUserOnline + "\n");
+         mOnlineUsers.append(newUserOnline);
          qDebug() << mOnlineUsers << " ***newClientsOnline**";
          ui->OnlineUsersBox->clear();
-         ui->OnlineUsersBox->setText(mOnlineUsers);
+         for(const auto &i : mOnlineUsers){
+             ui->OnlineUsersBox->append(i);
+         }
+
     }
     else if(text.startsWith("[logDeclinedUsrPas]")){
         qDebug() << "USER PASS INCORECT!";
