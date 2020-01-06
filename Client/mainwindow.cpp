@@ -45,39 +45,24 @@ void MainWindow::fromServer(){
     QTextStream T(mSocket);
     auto text = T.readAll();
 
-    //dodaj regex-e za proveru usera i pass , oznaceno dole gde treba da se doda provera u fji on_buttonBox_accepted
-    if(text.startsWith("[flushBug]")){
+    if(text.startsWith("[clientDisconected]")){
             QList<QString> tmpList = text.split(":");
-            auto nickLogOut = tmpList[2];
+            QString nickLogOut = tmpList[1];
 
-            QString disconnected = "";
-            disconnected.append("[Server]: " + nickLogOut + " se diskonektovao..");
-            ui->textBox->append(disconnected);
+            QString disconectedMsg = "";
+            disconectedMsg.append("User:[");
+            disconectedMsg.append(nickLogOut);
+            disconectedMsg.append("] se diskonektovao...");
+            ui->textBox->append(disconectedMsg);
 
-            ui->OnlineUsersBox->clear();
-            for (const auto &i : mOnlineUsers){
-                if (i.compare(nickLogOut)!=0){//ako su razliciti
+            if(mOnlineUsers.removeOne(nickLogOut)){
+                ui->OnlineUsersBox->clear();
+                for(const auto &i : mOnlineUsers){
                     ui->OnlineUsersBox->append(i);
                 }
+            }else{
+                qDebug() << "BUG!";
             }
-            QList<QString> tmpUsers(mOnlineUsers);
-            qDebug()<<"tmp pre promene:"<<tmpUsers;
-            for (auto i=0;i<tmpUsers.size(); i++){
-                if (tmpUsers[i].compare(nickLogOut)){
-                    tmpUsers[i]="";
-                }
-            }
-            mOnlineUsers.clear();
-            for (auto i=0;i<tmpUsers.size();i++){
-                if (tmpUsers[i]==""){
-                    continue;
-                }
-                else{
-                    mOnlineUsers.append(tmpUsers[i]);
-                }
-            }
-            qDebug()<<"musers:"<<mOnlineUsers;
-            tmpUsers.clear();
     }
     else if(text.startsWith("[logAccepted]")){
         QList<QString> tmpList = text.split(":");
@@ -186,16 +171,19 @@ void MainWindow::on_buttonBox_accepted()
     //QRegExp passwordRegex("^(?=.*[a-z])(?=.*[A-Z])(?=.*0-9)[a-zA-Z0-9]{8,}$");
 
     //Potvrda novog naloga (Treba napraviti novi nalog korisnika)
+
+    //KOM
     mNickname = ui->nickname_line->text();
     mUsername = ui->username_line->text();
     mPassword = ui->password_line->text();
 
-    QRegularExpression userNameRegex("[a-zA-Z0-9]{5,12}");
-    QRegularExpression passwordRegex("^(?=.*[a-z])(?=.*[A-Z])(?=.*0-9)[a-zA-Z0-9]{8,}$");
+//    QRegularExpression userNameRegex("[a-zA-Z0-9]{5,12}");
+//    QRegularExpression passwordRegex("^(?=.*[a-z])(?=.*[A-Z])(?=.*0-9)[a-zA-Z0-9]{8,}$");
 
-    QRegularExpressionMatch matchNickName = userNameRegex.match(mNickname);
-    QRegularExpressionMatch matchUserName = userNameRegex.match(mUsername);
-    QRegularExpressionMatch matchPassword = passwordRegex.match(mPassword);
+//    QRegularExpressionMatch matchNickName = userNameRegex.match(mNickname);
+//    QRegularExpressionMatch matchUserName = userNameRegex.match(mUsername);
+//    QRegularExpressionMatch matchPassword = passwordRegex.match(mPassword);
+    //KOM
 
     if(mNickname.isEmpty() or mUsername.isEmpty() or mPassword.isEmpty()){
         qDebug() << "Nickname,user,pass: " <<  mNickname << mUsername << mPassword;
@@ -203,18 +191,21 @@ void MainWindow::on_buttonBox_accepted()
         ui->stackedWidget->setCurrentWidget(ui->SignUpPage);
         ui->error_msg_line->setText("Morate uneti sva tri polja...");
     }
-    else if(!matchNickName.hasMatch() or !matchUserName.hasMatch()){
-        qDebug() << "Nickname,username:" <<  mNickname << mUsername;
-        on_buttonBox_rejected();
-        ui->stackedWidget->setCurrentWidget(ui->SignUpPage);
-        ui->error_msg_line->setText("Nickname i username moraju imati izmedju 5 i 12 karaktera!");
-    }
-    else if(!matchPassword.hasMatch()){
-        qDebug() << "Password:" <<  mPassword;
-        on_buttonBox_rejected();
-        ui->stackedWidget->setCurrentWidget(ui->SignUpPage);
-        ui->error_msg_line->setText("Sifra mora imati min. 8 karaktera,veliko slovo i cifru!");
-    }
+
+    //KOM
+//    else if(!matchNickName.hasMatch() or !matchUserName.hasMatch()){
+//        qDebug() << "Nickname,username:" <<  mNickname << mUsername;
+//        on_buttonBox_rejected();
+//        ui->stackedWidget->setCurrentWidget(ui->SignUpPage);
+//        ui->error_msg_line->setText("Nickname i username moraju imati izmedju 5 i 12 karaktera!");
+//    }
+//    else if(!matchPassword.hasMatch()){
+//        qDebug() << "Password:" <<  mPassword;
+//        on_buttonBox_rejected();
+//        ui->stackedWidget->setCurrentWidget(ui->SignUpPage);
+//        ui->error_msg_line->setText("Sifra mora imati min. 8 karaktera,veliko slovo i cifru!");
+//    }
+    //KOM
     else{
         qDebug() << "Nickname,user,pass: " <<  mNickname << mUsername << mPassword;
         //TEST

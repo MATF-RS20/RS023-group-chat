@@ -196,7 +196,7 @@ void SocketServer::clientDisconected(SocketClient *S, int ST){
             }
             for (const auto &i : mSockets) {
                 QTextStream K(i);
-                K << "[flushBug]:diskonektovao se klijent:"
+                K << "[clientDisconected]:"
                   << pom.clintNickname;
                 i->flush();
                 K.flush();
