@@ -128,6 +128,7 @@ void MainWindow::on_connect_button_clicked()
 
     connect(mSocket,&QTcpSocket::connected,this,&MainWindow::connectSuccesful);
     connect(mSocket, &QTcpSocket::readyRead,this,&MainWindow::fromServer);
+
 }
 
 void MainWindow::connectSuccesful(){
@@ -160,7 +161,8 @@ void MainWindow::on_signUp_clicked()
 }
 
 void MainWindow::on_buttonBox_accepted()
-{
+{   //Potvrda novog naloga (Treba napraviti novi nalog korisnika)
+
     //regex za sifru: min 8 karaktera, bar 1 veliko i jedno malo slovo i bar jedan broj, bez specijalnih karaktera:
     //^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$
 
@@ -170,7 +172,6 @@ void MainWindow::on_buttonBox_accepted()
    // QRegExp userNameRegex("[a-zA-Z0-9]{5,12}");
     //QRegExp passwordRegex("^(?=.*[a-z])(?=.*[A-Z])(?=.*0-9)[a-zA-Z0-9]{8,}$");
 
-    //Potvrda novog naloga (Treba napraviti novi nalog korisnika)
 
     //KOM
     mNickname = ui->nickname_line->text();
@@ -187,8 +188,8 @@ void MainWindow::on_buttonBox_accepted()
 
     if(mNickname.isEmpty() or mUsername.isEmpty() or mPassword.isEmpty()){
         qDebug() << "Nickname,user,pass: " <<  mNickname << mUsername << mPassword;
-        on_buttonBox_rejected();
-        ui->stackedWidget->setCurrentWidget(ui->SignUpPage);
+      //  on_buttonBox_rejected();
+       // ui->stackedWidget->setCurrentWidget(ui->SignUpPage);
         ui->error_msg_line->setText("Morate uneti sva tri polja...");
     }
 
@@ -243,17 +244,34 @@ void MainWindow::on_buttonBox_rejected()
     ui->error_msg_line->clear();
     ui->stackedWidget->setCurrentWidget(ui->loginPage);
 }
-
-void MainWindow::on_deleteAcc_button_clicked()
-{
-    //otvara se prozor za brisanje naloga
-    on_clear_clicked();
-    ui->stackedWidget->setCurrentWidget(ui->DeleteAccountPage);
-}
-
 void MainWindow::on_buttonBox_2_accepted()
 {
-    //Brise se nalog korisnika
+    //BRISE SE NALOG
+    QString username = ui->deleteUser_line->text();
+    QString password = ui->deletePasswd_line->text();
+
+    mSocketTmp = new QTcpSocket(this);
+    mSocketTmp->connectToHost("localhost",4567);
+    connect(mSocketTmp, &QTcpSocket::readyRead,this,&MainWindow::fromServerDeleteAcc);
+
+    QTextStream T(mSocketTmp);
+    T << "[DeleteAcc]:" << username << ":" << password;
+    mSocketTmp->flush();
+     ui->stackedWidget->setCurrentWidget(ui->loginPage);
+}
+
+void MainWindow::fromServerDeleteAcc(){
+   //Ovde cekam odgovor servera
+    QTextStream T(mSocketTmp);
+    auto text = T.readAll();
+    if(text.startsWith("DELETED")){
+        qDebug() << "DELETED!!!";
+         ui->stackedWidget->setCurrentWidget(ui->loginPage);
+    }
+    else{
+        qDebug() << "FAILED!";
+        ui->error_msg_line_3->setText("Neuspesno brisanje naloga..");
+    }
 }
 
 void MainWindow::on_buttonBox_2_rejected()
@@ -263,5 +281,31 @@ void MainWindow::on_buttonBox_2_rejected()
     ui->deleteUser_line->clear();
     ui->deletePasswd_line->clear();
     ui->error_msg_line_3->clear();
+    ui->stackedWidget->setCurrentWidget(ui->ModifyAccountPage);
+}
+
+void MainWindow::on_ChangeNickname_button_clicked()
+{
+    //Treba promeniti nickname korisnika
+}
+
+void MainWindow::on_ChangePasswd_button_clicked()
+{
+    //Treba promeniti sifru korisnika
+}
+
+void MainWindow::on_DeteleAccount_button_clicked()
+{
+    //Otvara se prozor za brisanje naloga
+    ui->stackedWidget->setCurrentWidget(ui->DeleteAccountPage);
+}
+
+void MainWindow::on_ModifyAcc_button_clicked()
+{   //Otvara se prozor za izmenu naloga
+     ui->stackedWidget->setCurrentWidget(ui->ModifyAccountPage);
+}
+void MainWindow::on_Back_button_clicked()
+{
+    //Vracamo korisnika na loginPage
     ui->stackedWidget->setCurrentWidget(ui->loginPage);
 }
