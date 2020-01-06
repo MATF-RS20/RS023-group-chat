@@ -2575,7 +2575,7 @@
      <widget class="QPushButton" name="send">
       <property name="geometry">
        <rect>
-        <x>440</x>
+        <x>410</x>
         <y>430</y>
         <width>81</width>
         <height>41</height>

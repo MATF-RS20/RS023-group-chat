@@ -45,15 +45,13 @@ void MainWindow::fromServer(){
     auto text = T.readAll();
 
     //dodaj regex-e za proveru usera i pass , oznaceno dole gde treba da se doda provera u fji on_buttonBox_accepted
-
     if(text.startsWith("[flushBug]")){
-
             QList<QString> tmpList = text.split(":");
             auto nickLogOut = tmpList[2];
 
-            ui->textBox->append("klijent:");
-            ui->textBox->append(nickLogOut);
-            ui->textBox->append("se diskonektovao...");
+            QString disconnected = "";
+            disconnected.append("[Server]: " + nickLogOut + " se diskonektovao..");
+            ui->textBox->append(disconnected);
 
             ui->OnlineUsersBox->clear();
             for (const auto &i : mOnlineUsers){
@@ -61,22 +59,20 @@ void MainWindow::fromServer(){
                     ui->OnlineUsersBox->append(i);
                 }
             }
-
             QList<QString> tmpUsers(mOnlineUsers);
             qDebug()<<"tmp pre promene:"<<tmpUsers;
             for (auto i=0;i<tmpUsers.size(); i++){
                 if (tmpUsers[i].compare(nickLogOut)){
                     tmpUsers[i]="";
                 }
-
             }
             mOnlineUsers.clear();
             for (auto i=0;i<tmpUsers.size();i++){
                 if (tmpUsers[i]==""){
                     continue;
                 }
-                else {
-                     mOnlineUsers.append(tmpUsers[i]);
+                else{
+                    mOnlineUsers.append(tmpUsers[i]);
                 }
             }
             qDebug()<<"musers:"<<mOnlineUsers;
@@ -130,7 +126,6 @@ void MainWindow::fromServer(){
 void MainWindow::on_connect_button_clicked()
 {
     //konektovanje na server i prikaz ChatBoxa..
-
     if(ui->username->text() == "" || ui->password->text() == "" || ui->hostname->text() == ""
              || ui->port->text() == ""){
         ui->error_msg_line_2->setText("Molimo popunite sva polja..");
@@ -154,7 +149,6 @@ void MainWindow::connectSuccesful(){
     T << "[logCheck]:" << mUsernameLog << ":" << mPasswordLog;
     mSocket->flush();
 }
-
 
 void MainWindow::on_send_clicked(){
     QString msg = ui->message->text();
