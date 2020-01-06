@@ -35,6 +35,12 @@ private slots:
     void on_buttonBox_rejected();
     void fromServerAccCheck();
 
+    void on_deleteAcc_button_clicked();
+
+    void on_buttonBox_2_accepted();
+
+    void on_buttonBox_2_rejected();
+
 private:
     Ui::MainWindow *ui;
     //server socket

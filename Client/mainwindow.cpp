@@ -231,3 +231,25 @@ void MainWindow::on_buttonBox_rejected()
     ui->error_msg_line->clear();
     ui->stackedWidget->setCurrentWidget(ui->loginPage);
 }
+
+void MainWindow::on_deleteAcc_button_clicked()
+{
+    //otvara se prozor za brisanje naloga
+    on_clear_clicked();
+    ui->stackedWidget->setCurrentWidget(ui->DeleteAccountPage);
+}
+
+void MainWindow::on_buttonBox_2_accepted()
+{
+    //Brise se nalog korisnika
+}
+
+void MainWindow::on_buttonBox_2_rejected()
+{
+    //Korisnik odustao od brisanja naloga
+    //Vracamo se na glavni prozor
+    ui->deleteUser_line->clear();
+    ui->deletePasswd_line->clear();
+    ui->error_msg_line_3->clear();
+    ui->stackedWidget->setCurrentWidget(ui->loginPage);
+}
