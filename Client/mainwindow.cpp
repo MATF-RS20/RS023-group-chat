@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include <regex>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -175,26 +176,46 @@ void MainWindow::on_signUp_clicked()
 
 void MainWindow::on_buttonBox_accepted()
 {
+    //regex za sifru: min 8 karaktera, bar 1 veliko i jedno malo slovo i bar jedan broj, bez specijalnih karaktera:
+    //^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$
 
-//    doda se  ovde jedan if pre ovih if else grana
-    //i pitas da li mUsername i mPassword zadovoljavaju regex, ako ne ispises u error msg line poruku u zavisnosti sta ne zadovoljava
-    //kao u if grani dole i kazes return , da izadje iz ove fje odmah, tj ne das mu da pita ovaj if else dole bez potrebe
-    //i to je to , taman mozes da napravis rekompoziciju ovih if else grana dole jer ovo ne valja
-    // ova if grana moze da se kombinuje sa tvojim kodom sa regexima, dakle kada god nesto ne valja neka udje u tu neku if granu
-    //ili kako vec napravis,kada su user,nick i pass dobri treba da radi ovu elsu granu i to nemoj da diras jel je dobro napisana
-    //tj samo napravi da kada su polja popunjena i prodju regexe onda ode u ovaj trenutni else a inace da radi ovaj ispis greske
-    //kao u ovoj if grani sto sada bleji...
+    //regex za username: izmedju 5 i 12 karaktera, mogu velika, mala slova i brojevi
+    //[a-zA-Z\d]{5,12}
+
+   // QRegExp userNameRegex("[a-zA-Z0-9]{5,12}");
+    //QRegExp passwordRegex("^(?=.*[a-z])(?=.*[A-Z])(?=.*0-9)[a-zA-Z0-9]{8,}$");
 
     //Potvrda novog naloga (Treba napraviti novi nalog korisnika)
     mNickname = ui->nickname_line->text();
     mUsername = ui->username_line->text();
     mPassword = ui->password_line->text();
+
+    QRegularExpression userNameRegex("[a-zA-Z0-9]{5,12}");
+    QRegularExpression passwordRegex("^(?=.*[a-z])(?=.*[A-Z])(?=.*0-9)[a-zA-Z0-9]{8,}$");
+
+    QRegularExpressionMatch matchNickName = userNameRegex.match(mNickname);
+    QRegularExpressionMatch matchUserName = userNameRegex.match(mUsername);
+    QRegularExpressionMatch matchPassword = passwordRegex.match(mPassword);
+
     if(mNickname.isEmpty() or mUsername.isEmpty() or mPassword.isEmpty()){
         qDebug() << "Nickname,user,pass: " <<  mNickname << mUsername << mPassword;
         on_buttonBox_rejected();
         ui->stackedWidget->setCurrentWidget(ui->SignUpPage);
         ui->error_msg_line->setText("Morate uneti sva tri polja...");
-    }else{
+    }
+    else if(!matchNickName.hasMatch() or !matchUserName.hasMatch()){
+        qDebug() << "Nickname,username:" <<  mNickname << mUsername;
+        on_buttonBox_rejected();
+        ui->stackedWidget->setCurrentWidget(ui->SignUpPage);
+        ui->error_msg_line->setText("Nickname i username moraju imati izmedju 5 i 12 karaktera!");
+    }
+    else if(!matchPassword.hasMatch()){
+        qDebug() << "Password:" <<  mPassword;
+        on_buttonBox_rejected();
+        ui->stackedWidget->setCurrentWidget(ui->SignUpPage);
+        ui->error_msg_line->setText("Sifra mora imati min. 8 karaktera,veliko slovo i cifru!");
+    }
+    else{
         qDebug() << "Nickname,user,pass: " <<  mNickname << mUsername << mPassword;
         //TEST
         mSocketTmp = new QTcpSocket(this);

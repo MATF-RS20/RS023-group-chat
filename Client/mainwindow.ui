@@ -466,7 +466,7 @@
     <property name="geometry">
      <rect>
       <x>-10</x>
-      <y>0</y>
+      <y>-20</y>
       <width>631</width>
       <height>521</height>
      </rect>
@@ -2931,8 +2931,8 @@
      <widget class="QDialogButtonBox" name="buttonBox">
       <property name="geometry">
        <rect>
-        <x>140</x>
-        <y>340</y>
+        <x>240</x>
+        <y>380</y>
         <width>166</width>
         <height>25</height>
        </rect>
@@ -3415,9 +3415,9 @@
      <widget class="QLineEdit" name="error_msg_line">
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>120</x>
         <y>340</y>
-        <width>211</width>
+        <width>421</width>
         <height>21</height>
        </rect>
       </property>
