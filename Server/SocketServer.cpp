@@ -141,7 +141,7 @@ void SocketServer::broadcastAll(SocketClient *client){
                 return;
             }
             if(i.clientUsername.compare(user) == 0 and i.clientPassword.compare(pass) != 0){
-                //postoji user ali je sifra pogresna
+                //postoji user ali je pogresna sifra
                 qDebug() << "Poklopio se USER ali PASSWD pogresan!";
                 mSockets.removeOne(client);
                 mAccSocketsDeclined << client;
