@@ -47,7 +47,6 @@ void MainWindow::fromServer(){
     //dodaj regex-e za proveru usera i pass , oznaceno dole gde treba da se doda provera u fji on_buttonBox_accepted
 
     if(text.startsWith("[flushBug]")){
-            qDebug()<<"uslaaaaa";
 
             QList<QString> tmpList = text.split(":");
             auto nickLogOut = tmpList[2];
