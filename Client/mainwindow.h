@@ -37,7 +37,10 @@ private slots:
     void fromServerDeleteAcc();
     void on_deleteAcc_button_clicked();
     void on_buttonBox_2_accepted();
-    void on_buttonBox_2_rejected();
+    void on_buttonBox_2_rejected();  
+    void on_Back_button_clicked();
+
+    void on_Back_button_2_clicked();
 
 private:
     Ui::MainWindow *ui;

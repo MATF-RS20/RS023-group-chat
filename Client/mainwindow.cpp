@@ -274,12 +274,12 @@ void MainWindow::fromServerDeleteAcc(){
         ui->stackedWidget->setCurrentWidget(ui->DeleteAccountPage);
         ui->deleteUser_line->clear();
         ui->deletePasswd_line->clear();
-        ui->error_msg_line_3->setText("Acc je aktivan na mrezi...ne moze se izbrisati!");
+        ui->error_msg_line_3->setText("Nalog je aktivan, ne moze se izbrisati!");
     }else{
         ui->stackedWidget->setCurrentWidget(ui->DeleteAccountPage);
         ui->deleteUser_line->clear();
         ui->deletePasswd_line->clear();
-        ui->error_msg_line_3->setText("Pogresan user i pass, ne moguce obrisati acc....");
+        ui->error_msg_line_3->setText("Nepostojeci nalog, neuspesno brisanje!");
     }
     mSocketDeleteAcc->disconnectFromHost();
 }
@@ -291,5 +291,16 @@ void MainWindow::on_buttonBox_2_rejected()
     ui->deleteUser_line->clear();
     ui->deletePasswd_line->clear();
     ui->error_msg_line_3->clear();
+    ui->stackedWidget->setCurrentWidget(ui->loginPage);
+}
+
+
+void MainWindow::on_Back_button_clicked()
+{   //Back dugmence na deleteAccPage
+    ui->stackedWidget->setCurrentWidget(ui->loginPage);
+}
+
+void MainWindow::on_Back_button_2_clicked()
+{   //Back dugmence na SignUpPage
     ui->stackedWidget->setCurrentWidget(ui->loginPage);
 }
