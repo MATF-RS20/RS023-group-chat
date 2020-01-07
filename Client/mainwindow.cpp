@@ -254,6 +254,34 @@ void MainWindow::on_deleteAcc_button_clicked()
 void MainWindow::on_buttonBox_2_accepted()
 {
     //Brise se nalog korisnika
+    mSocketDeleteAcc = new QTcpSocket(this);
+    mSocketDeleteAcc->connectToHost("localhost",4567);
+    connect(mSocketDeleteAcc, &QTcpSocket::readyRead,this,&MainWindow::fromServerDeleteAcc);
+    QTextStream T(mSocketDeleteAcc);
+    QString deleteUser = ui->deleteUser_line->text();
+    QString deletePass = ui->deletePasswd_line->text();
+    T << "[deleteAcc]:" << deleteUser << ":" << deletePass;
+    mSocketDeleteAcc->flush();
+    ui->stackedWidget->setCurrentWidget(ui->loginPage);
+}
+
+void MainWindow::fromServerDeleteAcc(){
+    QTextStream T(mSocketDeleteAcc);
+    auto text = T.readAll();
+    if(text.startsWith("[accDeleted]")){
+        qDebug() << "*****USPESNO OBRISAN ACC*****!!!";
+    }else if(text.startsWith("[activeAcc]")){
+        ui->stackedWidget->setCurrentWidget(ui->DeleteAccountPage);
+        ui->deleteUser_line->clear();
+        ui->deletePasswd_line->clear();
+        ui->error_msg_line_3->setText("Acc je aktivan na mrezi...ne moze se izbrisati!");
+    }else{
+        ui->stackedWidget->setCurrentWidget(ui->DeleteAccountPage);
+        ui->deleteUser_line->clear();
+        ui->deletePasswd_line->clear();
+        ui->error_msg_line_3->setText("Pogresan user i pass, ne moguce obrisati acc....");
+    }
+    mSocketDeleteAcc->disconnectFromHost();
 }
 
 void MainWindow::on_buttonBox_2_rejected()

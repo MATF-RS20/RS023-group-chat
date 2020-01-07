@@ -34,11 +34,9 @@ private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
     void fromServerAccCheck();
-
+    void fromServerDeleteAcc();
     void on_deleteAcc_button_clicked();
-
     void on_buttonBox_2_accepted();
-
     void on_buttonBox_2_rejected();
 
 private:
@@ -56,6 +54,8 @@ private:
 
 //    ovaj socket otvaramo ka serveru samo kada proveravamo acc
     QTcpSocket *mSocketTmp;
+//    ovaj socket otvaramo ka serveru samo kada brisemo acc
+    QTcpSocket *mSocketDeleteAcc;
 
 //    lista online usera
     QList<QString> mOnlineUsers;

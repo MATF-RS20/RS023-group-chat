@@ -157,6 +157,49 @@ void SocketServer::broadcastAll(SocketClient *client){
         S << "[logDeclinedUsrPas]";
         client->flush();
         return;
+    }else if(text.startsWith("[deleteAcc]")){
+        qDebug() << "**DELETE ACC" << text;
+        auto socketTmp = client;
+        mSockets.removeOne(client);
+        mAccDeleted << socketTmp;
+
+        QList<QString> splited = text.split(":");
+        QString user = splited[1];
+        QString pass = splited[2];
+
+        //podaci posle eventualnog brisanja klijenta
+        QList<QString> newData;
+        //klijent za brisanje, ako se poklopi sve...
+        clientData removedOne;
+
+        for(auto &i : mClientsData){
+            if(user.compare(i.clintNickname) == 0 and pass.compare(i.clientPassword) == 0){
+                if(i.clientSocket != nullptr){
+                    //acc nije izbrisan jer je klijent aktivan na njemu
+                    S << "[activeAcc]";
+                    client->flush();
+                    return;
+                }
+                removedOne = i;
+            }else{
+                newData.append(i.clintNickname + ":" + i.clientUsername + ":" + i.clientPassword + "\n");
+            }
+        }
+        //acc nije izbrisan jer ne postoji takav, tj. sa tim userom i pass
+        if(!mClientsData.removeOne(removedOne)){
+            S << "[accNotDeleted]";
+            client->flush();
+            return;
+        }
+
+        QFile f("clients.txt");
+        f.open(QFile::ReadWrite | QFile::Text | QFile::Truncate);
+        QTextStream in(&f);
+        for(auto &i : newData){
+            in << i;
+        }
+        S << "[accDeleted]";
+        client->flush();
     }
     else{
         QString tmpNickname;
@@ -208,6 +251,9 @@ void SocketServer::clientDisconected(SocketClient *S, int ST){
             }
             if(mAccSocketsDeclined.removeOne(S)){
                 qDebug() << "Obrisan je accMakeDeclined socket!";
+            }
+            if(mAccDeleted.removeOne(S)){
+                qDebug() << "Obrisan je accDelete socket!";
             }
         }
     }
