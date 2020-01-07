@@ -52,7 +52,7 @@ void MainWindow::fromServer(){
             QString disconectedMsg = "";
             disconectedMsg.append("User:[");
             disconectedMsg.append(nickLogOut);
-            disconectedMsg.append("] se diskonektovao...");
+            disconectedMsg.append("] disconnected...");
             ui->textBox->append(disconectedMsg);
 
             if(mOnlineUsers.removeOne(nickLogOut)){
@@ -94,15 +94,15 @@ void MainWindow::fromServer(){
     }
     else if(text.startsWith("[logDeclinedUsrPas]")){
         qDebug() << "USER PASS INCORECT!";
-        ui->error_msg_line_2->setText("Nepostojeci nalog...");
+        ui->error_msg_line_2->setText("Missing account ...");
         mSocket->disconnectFromHost();
     }else if(text.startsWith("[logDeclinedInUse]")){
         mSocket->disconnectFromHost();
-        ui->error_msg_line_2->setText("Korisnik je vec aktivan...");
+        ui->error_msg_line_2->setText("User is already active ...");
     }
     else if(text.startsWith("[PasswdIncorrect]:")){
          mSocket->disconnectFromHost();
-         ui->error_msg_line_2->setText("Pogresna sifra naloga..");
+         ui->error_msg_line_2->setText("Wrong password");
     }
     else{
         ui->textBox->append(text);
@@ -114,7 +114,7 @@ void MainWindow::on_connect_button_clicked()
     //konektovanje na server i prikaz ChatBoxa..
     if(ui->username->text() == "" || ui->password->text() == "" || ui->hostname->text() == ""
              || ui->port->text() == ""){
-        ui->error_msg_line_2->setText("Molimo popunite sva polja..");
+        ui->error_msg_line_2->setText("You must enter all fields ...");
         return;
     }
 
@@ -189,7 +189,7 @@ void MainWindow::on_buttonBox_accepted()
         qDebug() << "Nickname,user,pass: " <<  mNickname << mUsername << mPassword;
         on_buttonBox_rejected();
         ui->stackedWidget->setCurrentWidget(ui->SignUpPage);
-        ui->error_msg_line->setText("Morate uneti sva tri polja...");
+        ui->error_msg_line->setText("You must enter all three fields ...");
     }
 
     //KOM
@@ -197,13 +197,13 @@ void MainWindow::on_buttonBox_accepted()
 //        qDebug() << "Nickname,username:" <<  mNickname << mUsername;
 //        on_buttonBox_rejected();
 //        ui->stackedWidget->setCurrentWidget(ui->SignUpPage);
-//        ui->error_msg_line->setText("Nickname i username moraju imati izmedju 5 i 12 karaktera!");
+//        ui->error_msg_line->setText("Nickname and username must be between 5 and 12 characters!");
 //    }
 //    else if(!matchPassword.hasMatch()){
 //        qDebug() << "Password:" <<  mPassword;
 //        on_buttonBox_rejected();
 //        ui->stackedWidget->setCurrentWidget(ui->SignUpPage);
-//        ui->error_msg_line->setText("Sifra mora imati min. 8 karaktera,veliko slovo i cifru!");
+//        ui->error_msg_line->setText("Password must have min.8 characters,a capital letter and number!");
 //    }
     //KOM
     else{
@@ -274,12 +274,12 @@ void MainWindow::fromServerDeleteAcc(){
         ui->stackedWidget->setCurrentWidget(ui->DeleteAccountPage);
         ui->deleteUser_line->clear();
         ui->deletePasswd_line->clear();
-        ui->error_msg_line_3->setText("Nalog je aktivan, ne moze se izbrisati!");
+        ui->error_msg_line_3->setText("The account is active, cannot be deleted!");
     }else{
         ui->stackedWidget->setCurrentWidget(ui->DeleteAccountPage);
         ui->deleteUser_line->clear();
         ui->deletePasswd_line->clear();
-        ui->error_msg_line_3->setText("Nepostojeci nalog, neuspesno brisanje!");
+        ui->error_msg_line_3->setText("Missing account, deletion failed!");
     }
     mSocketDeleteAcc->disconnectFromHost();
 }
